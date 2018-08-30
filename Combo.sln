@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Combo", "Combo\Combo.csproj", "{BB11072C-8DFE-4144-8900-300CAD34FECA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB11072C-8DFE-4144-8900-300CAD34FECA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB11072C-8DFE-4144-8900-300CAD34FECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB11072C-8DFE-4144-8900-300CAD34FECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB11072C-8DFE-4144-8900-300CAD34FECA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FAE87435-9064-4367-81DA-0522024D0B2A}
+	EndGlobalSection
+EndGlobal
