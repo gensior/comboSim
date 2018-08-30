@@ -21,7 +21,7 @@ namespace Combo
                 sides = Int32.Parse(args[0]);
             }
 
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter($"./sim_{sides}d.txt"))
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter($"./Sims/{sides}d.txt"))
             {
                 file.Write($"{sides}d\t");
                 foreach (var combination in combinations)
