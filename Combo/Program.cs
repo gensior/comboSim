@@ -12,7 +12,7 @@ namespace Combo
 
         static void Main(string[] args)
         {
-            var set = new List<string> { "L", "A", "C", "M", "S"};
+            var set = new List<string> { "L", "A", "C", "M", "S", "P"};
             var results = new List<List<double>>();
             var combinations = GenerateCombinations(set, 4);
 
@@ -43,7 +43,7 @@ namespace Combo
                     {
                         if (_index >= index)
                         {
-                            results[index].Add(Simulate(combination, _combination));
+                            results[index].Add(Simulate(_combination, combination));
                             
                         } else
                         {
@@ -106,10 +106,10 @@ namespace Combo
                 while(tie)
                 {
                     (victory, tie) = Battle(armyOne, armyTwo);
-                    if (victory && !tie)
-                    {
-                        wins++;
-                    }
+                }
+                if (victory)
+                {
+                    wins++;
                 }
             }
             //Console.WriteLine($" wins: {wins}");
@@ -164,9 +164,11 @@ namespace Combo
             var result = new List<int>(rolls);
             (int val, int index) = FindLowest(rolls);
 
-            if (val < Math.Ceiling((double)sides/2))
+            if (val <= Math.Ceiling((double)sides/2))
             {
-                result[index] = rand.Next(1, sides+1);
+                var new_roll = rand.Next(1, sides+1);
+                //Console.WriteLine($"replaced {result[index]} with {new_roll}");
+                result[index] = new_roll;
             }
             
             return result;
