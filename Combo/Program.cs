@@ -12,7 +12,7 @@ namespace Combo
 
         static void Main(string[] args)
         {
-            var set = new List<string> { "L", "A", "C", "M", "S", "P"};
+            var set = new List<string> { "L", "A", "C", "M", "S", "P" };
             var results = new List<List<double>>();
             var combinations = GenerateCombinations(set, 4);
 
@@ -43,11 +43,11 @@ namespace Combo
                     {
                         if (_index >= index)
                         {
-                            results[index].Add(Simulate(_combination, combination));
+                            results[index].Add(Simulate(combination, _combination));
                             
                         } else
                         {
-                            results[index].Add(results[_index][index]);
+                            results[index].Add(100-results[_index][index]);
                         }
                         file.Write(String.Format("{0,5:##0.0}\t", results[index][_index]));
                         _index++;
@@ -162,7 +162,7 @@ namespace Combo
         private static List<int> MageReroll(List<int> rolls)
         {
             var result = new List<int>(rolls);
-            (int val, int index) = FindLowest(rolls);
+            (int val, int index) = FindLowest(result);
 
             if (val <= Math.Ceiling((double)sides/2))
             {
