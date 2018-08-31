@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Combo.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Combo
 {
     class Program
     {
-        static readonly Random rand = new Random();
-        static int sides = 6;
+        static Dice _dice;
         static readonly int simCount = 1000;
 
         static void Main(string[] args)
@@ -18,12 +17,12 @@ namespace Combo
 
             if (args.Length > 0)
             {
-                sides = Int32.Parse(args[0]);
+                _dice = new Dice(new Random(), Int32.Parse(args[0]));
             }
 
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter($"./Sims/{sides}d.txt"))
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter($"./Engagements/{_dice.Sides}d.txt"))
             {
-                file.Write($"{sides}d\t");
+                file.Write($"{_dice.Sides}d\t");
                 foreach (var combination in combinations)
                 {
                     string combinationStr = string.Join("", combination);
@@ -96,119 +95,18 @@ namespace Combo
 
         private static double Simulate(List<string> armyOne, List<string> armyTwo)
         {
-            //Console.Write($"{string.Join("", armyOne)} fighting {string.Join("", armyTwo)}");
             var wins = 0;
 
             for (int i = 0; i < simCount; i++)
             {
-                var tie = true;
-                var victory = false;
-                while(tie)
-                {
-                    (victory, tie) = Battle(armyOne, armyTwo);
-                }
-                if (victory)
+                Engagement engagement = new Engagement(new Army(armyOne), new Army(armyTwo), _dice);
+                if (engagement.Battle())
                 {
                     wins++;
                 }
             }
             //Console.WriteLine($" wins: {wins}");
             return (double) wins/simCount*100;
-        }
-
-        private static (bool, bool) Battle(List<string> armyOne, List<string> armyTwo)
-        {
-            var rolls1 = Fight(armyOne);
-            var rolls2 = Fight(armyTwo);
-
-            // Account for Mage(s)
-            rolls1 = MageAffect(armyOne, rolls1);
-            rolls2 = MageAffect(armyTwo, rolls2);
-
-            var sum1 = rolls1.Sum();
-            var sum2 = rolls2.Sum();
-
-            // Account for Archer Bonus (Archer > Levy)
-            sum1 = sum1 + CountItemsInList("A", armyOne) * CountItemsInList("L", armyTwo);
-            sum2 = sum2 + CountItemsInList("A", armyTwo) * CountItemsInList("L", armyOne);
-
-            // Account for Cavalry Bonus (Cavalry > Archer)
-            sum1 = sum1 + CountItemsInList("C", armyOne) * CountItemsInList("A", armyTwo);
-            sum2 = sum2 + CountItemsInList("C", armyTwo) * CountItemsInList("A", armyOne);
-
-            // Account for Levy Bonus (Levy > Cavalry)
-            sum1 = sum1 + CountItemsInList("L", armyOne) * CountItemsInList("C", armyTwo);
-            sum2 = sum2 + CountItemsInList("L", armyTwo) * CountItemsInList("C", armyOne);
-
-            // Account for Swordsman Bonus
-            sum1 = sum1 + CountItemsInList("S", armyOne);
-            sum2 = sum2 + CountItemsInList("S", armyTwo);
-
-            return (sum1 > sum2, sum1 == sum2);
-        }
-
-        private static List<int> MageAffect(List<string> army, List<int> rolls)
-        {
-            var mageCount = CountItemsInList("M", army);
-            var result = new List<int>(rolls);
-            while(mageCount > 0)
-            {
-                result = MageReroll(result);
-                mageCount--;
-            }
-            return result;
-        }
-
-        private static List<int> MageReroll(List<int> rolls)
-        {
-            var result = new List<int>(rolls);
-            (int val, int index) = FindLowest(result);
-
-            if (val <= Math.Ceiling((double)sides/2))
-            {
-                var new_roll = rand.Next(1, sides+1);
-                //Console.WriteLine($"replaced {result[index]} with {new_roll}");
-                result[index] = new_roll;
-            }
-            
-            return result;
-        }
-
-        private static List<int> Fight<T>(List<T> army)
-        {
-            var rolls = new List<int>();
-
-            foreach (var _soldier in army)
-            {
-                rolls.Add(rand.Next(1, sides+1));
-            }
-
-            return rolls;
-        }
-
-        private static int CountItemsInList(string item, List<string> items)
-        {
-            var result = 0;
-            foreach (var _item in items)
-            {
-                if (item == _item)
-                {
-                    result++;
-                }
-            }
-            return result;
-        }
-
-        private static (T, int) FindLowest<T>(List<T> items) where T : IComparable<T>
-        {
-            var min = items.Min();
-            return (min, items.IndexOf(min));
-        }
-
-        private (T, int) FindMax<T>(List<T> items) where T : IComparable<T>
-        {
-            var max = items.Max();
-            return (max, items.IndexOf(max));
         }
     }
 }
